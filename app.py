@@ -88,9 +88,25 @@ st.write("Aplikasi ini menggunakan Machine Learning & Rule-Based Filtering untuk
 
 with st.sidebar:
     st.header("⚙️ Pengaturan")
-    default_api_key = st.secrets["YOUTUBE_API_KEY"] if "YOUTUBE_API_KEY" in st.secrets else ""
-    api_key = st.text_input("Masukkan YouTube API Key:", value=default_api_key, type="password", help="Dapatkan di Google Cloud Console")
-    st.info("API Key diperlukan untuk menarik komentar langsung dari link YouTube.")
+    
+    has_secret_key = "YOUTUBE_API_KEY" in st.secrets
+    
+    input_api_key = st.text_input(
+        "Masukkan YouTube API Key (Opsional):", 
+        value="", 
+        type="password", 
+        help="Biarkan kosong untuk menggunakan API Key bawaan sistem, atau isi jika ingin pakai milik Anda sendiri."
+    )
+    
+    if input_api_key.strip() != "":
+        api_key = input_api_key
+        st.success("🔑 Menggunakan API Key kustom Anda.")
+    elif has_secret_key:
+        api_key = st.secrets["YOUTUBE_API_KEY"]
+        st.success("✅ Menggunakan API Key bawaan sistem.")
+    else:
+        api_key = ""
+        st.info("ℹ️ Masukkan API Key untuk menarik komentar.")
     
     st.divider()
     st.subheader("🎛️ Sensitivitas AI")
